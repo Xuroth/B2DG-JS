@@ -1,0 +1,29 @@
+{{#extend "css"}}
+<link rel="stylesheet" href="/css/offcanvas.css"> {{!-- Offcanvas Plugin --}}
+{{/extend}}
+<nav class="navbar navbar-expand-lg fixed-top navbar-light bg-light">
+    <a href="/" class="navbar-brand">{{settings.title}}</a>
+    <button class="navbar-toggler" type="button" data-toggle="offcanvas" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle main navigation">
+        <i class="fal fa-bars"></i>
+    </button>
+    <div class="navbar-collapse offcanvas-collapse" id="mainNavbar">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a href="/" class="nav-link">Home</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+{{#extend "js"}}
+<script>
+    //Basic Offcanvas toggler. Should be expanded to allow each toggle to point to a specific #id.
+    $(function() {
+        'use strict'
+
+        $('[data-toggle="offcanvas"]').on('click', function() {
+            $('.offcanvas-collapse').toggleClass('open')
+        })
+    })
+</script>
+{{/extend}}

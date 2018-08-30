@@ -5,15 +5,22 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{{settings.title}}</title>
         {{!-- Styles --}}
-        <link rel="stylesheet" href="/css/master.css">
+        <link rel="stylesheet" href="/css/bootstrap.css"> {{!-- Bootstrap --}}
+        <link rel="stylesheet" href="/css/all.min.css"> {{!-- FontAwesome Pro --}}
+        <link rel="stylesheet" href="/css/master.css"> {{!-- Main Overrides --}}
         {{!-- Custom Styles --}}
         {{{block "css"}}}
     </head>
     <body>
-        {{{body}}}
+        {{> navigationMain}}
+        <main class="container">
+            {{{body}}}
+        </main>
+        
 
         {{!-- Scripts --}}
-
+        <script src="/js/jQuery-3.3.1.min.js"></script> {{!-- jQuery --}}
+        <script src="/js/bootstrap.bundle.min.js"></script> {{!-- Bootstrap + Popper --}}
         {{!-- Custom Scripts --}}
         {{{block "js"}}}
     </body>
