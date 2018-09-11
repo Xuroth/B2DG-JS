@@ -4,7 +4,7 @@ module.exports = (app, passport, ...rest) => {
             res.render('pages/auth/login')
         })
         .post(passport.authenticate('local-login',{
-            successRedirect: '/home',
+            successRedirect: '/',
             failureRedirect: '/login',
             failureFlash: true
         }))
@@ -18,4 +18,13 @@ module.exports = (app, passport, ...rest) => {
             failureRedirect: '/register',
             failureFlash: true
         }))
+    app.route('/logout')
+        .get( (req, res) => {
+            // console.log(req.logout.toString())
+            req.session.destroy((err) => {
+                res.clearCookie('connect.sid');
+                res.redirect('/');
+            })
+            // res.redirect('/');
+        })
 }
