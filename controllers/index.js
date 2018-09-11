@@ -3,7 +3,7 @@ var viewSettings = {
     title: 'B2D | '
 }
 
-module.exports = (app, ...rest) => {
+module.exports = (app, passport, ...rest) => {
     //Sub-Routers
 
     app.route('/')
@@ -32,4 +32,7 @@ module.exports = (app, ...rest) => {
             locals.settings.title = 'B2D | Contact Us';
             res.render('pages/base/contact', locals)
         })
+
+    //Routes from Auth Controller
+    require('./Auth.js')(app, passport)
 }

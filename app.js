@@ -2,7 +2,11 @@
 var express     =   require('express'),
     chalk       =   require('chalk'),
     hbs         =   require('express-handlebars').create({defaultLayout: 'main', extname: '.hbs', partialsDir: 'views/layouts/partials'}),
-    extend      =   require('handlebars-extend-block')
+    extend      =   require('handlebars-extend-block'),
+    mongoose    =   require('mongoose'),
+    passport    =   require('passport'),
+    flash       =   require('connect-flash'),
+    bodyParser  =   require('body-parser')
 
 // Initilize App Configuration
 var app = express();
@@ -17,10 +21,31 @@ app.engine('.hbs', hbs.engine)
 app.set('view engine', '.hbs')
 hbs.getPartials()
 app.use(express.static('public'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}))
+app.use(require('express-session')({
+    secret: 'Dorsal Fin Fire Extinguisher',
+    resave: false,
+    saveUninitialized: false
+}))
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
 
+require('./conf/passport')(passport);
+
+//Database Connection
+let dbURI = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`;
+mongoose.connect(dbURI, {useNewUrlParser: true}, (err, res) => {
+    if(err){
+        console.error(chalk.bgRed.bold(`Database Error\n[${err.name}] : ${err.message}`))
+    } else {
+        console.log(chalk.green.bold('Database connection established.'));
+    }
+})
 
 // Router
-require('./controllers')(app);
+require('./controllers')(app, passport);
 
 // Server Loop
 app.listen( process.env.PORT, () => {
