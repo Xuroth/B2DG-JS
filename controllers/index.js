@@ -46,4 +46,6 @@ module.exports = (app, passport, ...rest) => {
 
     //Routes from Auth Controller
     require('./Auth.js')(app, passport)
+    //Routes from Store Controller
+    require('./Store.js')(app, passport)
 }

@@ -29,6 +29,7 @@
     "handlebars-extend-block": "^1.0.0",
     "method-override": "^3.0.0",
     "mongoose": "^5.2.10",
+    "mongoose-double": "0.0.1",
     "morgan": "^1.9.0",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0"
