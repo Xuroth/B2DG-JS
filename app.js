@@ -6,7 +6,8 @@ var express     =   require('express'),
     mongoose    =   require('mongoose'),
     passport    =   require('passport'),
     flash       =   require('connect-flash'),
-    bodyParser  =   require('body-parser')
+    bodyParser  =   require('body-parser'),
+    getSettings =   require('./middleware/settings')
 
 // Initilize App Configuration
 var app = express();
@@ -19,6 +20,7 @@ hbs.handlebars = extend(hbs.handlebars)
 
 app.engine('.hbs', hbs.engine)
 app.set('view engine', '.hbs')
+
 hbs.getPartials()
 app.use(express.static('public'));
 app.use(bodyParser.json());
@@ -43,6 +45,8 @@ mongoose.connect(dbURI, {useNewUrlParser: true}, (err, res) => {
         console.log(chalk.green.bold('Database connection established.'));
     }
 })
+//Get Site Settings from db.
+app.use(getSettings)
 
 // Router
 require('./controllers')(app, passport);

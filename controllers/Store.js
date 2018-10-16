@@ -5,6 +5,8 @@ module.exports = (app, passport, ...rest) => {
             Products.find({salable: true}, (err, products) => {
                 //Add sorting logic based on database config.store.defaultSortOrder
                 //switch/case 'highestSales','newest', etc.
+
+                //Fetch categories and move below code into callback for categories.
                 if(err) console.log(err)
                 let locals = {
                     products,
@@ -14,12 +16,46 @@ module.exports = (app, passport, ...rest) => {
                 //console.log(products)
             })
         })
+        .post( (req, res) => {
+            //perform fuzzy matches and return list
+            Products.find({salable:true}, (err, products) => {
+                if(err) console.log(err)
+
+            })
+        })
+
+    app.route('/product/:product')
+        .get( (req, res) => {
+            let prodName = req.params.product.split('_').join(' ')
+            console.log(prodName)
+            var ObjectId = require('mongoose').Types.ObjectId;
+            if(ObjectId.isValid(prodName)){
+                validObjectId = true
+            } else {
+                validObjectId = false;
+            }
+            
+            if (validObjectId) {
+                //Supplied parameter is objectId
+                Products.findOne({salable: true, _id: prodName}, (err, product) => {
+                    if(err) console.log(err)
+                    console.log('Product (by ID): ', product)
+                    res.render('pages/store/product', {product})
+                })
+            } else {
+                Products.findOne({salable: true, name: prodName}, (err, product) => {
+                    if(err) console.log(err)
+                    console.log('Product: ',product)
+                })
+            }
+            
+        })
     //Delete this route after testing!
     app.route('/newProd')
         .get( (req, res) => {
             if(app.get('env') === 'development') {
                 let testProd = new Products({
-                    name: 'TestProduct',
+                    name: 'TestProduct With Spaces',
                     description: 'A simple test product that should not be visible except to admins',
                     price: 12.96,
                     salable: false,

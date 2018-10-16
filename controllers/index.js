@@ -1,22 +1,21 @@
 //- Base Router
-var viewSettings = {
-    title: 'B2D | '
-}
+const userHas = require('../middleware/permissions');
 
 var user = null;
 
 module.exports = (app, passport, ...rest) => {
+   
     //Sub-Routers
-
     app.route('/')
         .get( (req, res) => {
+            //console.log(req.siteSettings.navigationBar.navLinks)
             let locals = {
-                settings: viewSettings,
+                settings: req.siteSettings
             }
             if(req.user){
                 locals.user = req.user
             }
-            locals.settings.title = 'B2D | Home';
+            locals.settings.siteTitle += 'Home';
             res.render('pages/base/home', locals);
         })
     
@@ -43,7 +42,10 @@ module.exports = (app, passport, ...rest) => {
             locals.settings.title = 'B2D | Contact Us';
             res.render('pages/base/contact', locals)
         })
-
+    app.route('/testPerm')
+        .get( userHas({roles: ['Admin2'], permissions:['lookAtStuff']}), (req, res) => {
+            res.redirect('/')
+        })
     //Routes from Auth Controller
     require('./Auth.js')(app, passport)
     //Routes from Store Controller
