@@ -40,7 +40,7 @@ module.exports = (app, passport, ...rest) => {
                 Products.findOne({salable: true, _id: prodName}, (err, product) => {
                     if(err) console.log(err)
                     console.log('Product (by ID): ', product)
-                    res.render('pages/store/product', {product})
+                    res.render('pages/store/product', {product, productJSON: JSON.stringify(product)})
                 })
             } else {
                 Products.findOne({salable: true, name: prodName}, (err, product) => {
