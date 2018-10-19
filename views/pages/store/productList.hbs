@@ -1,16 +1,53 @@
 {{!-- 
     container, flexGridRows, imageCards
  --}}
-{{#each products as |product|}}
-    <a href="/product/{{product._id}}">
-    <div class="card">
-        <div class="card-body">
-            <h3>{{product.name}}</h3>
-        </div>
-    </div>
-    </a>
-{{else}}
+
+
+
 <div class="card">
-    <h1>No Products!</h1>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-xs-12 col-md-2 order-2 order-md-1">
+                Sidebar
+            </div>
+            <div class="col-xs-12 col-md-10 order-1 order-md-2">
+                <div class="productsList">
+                    {{#each products as |product|}}
+                        <a href="/product/{{product._id}}" class="productCard">
+                            <div class="card">
+                                <div class="productCardImage">
+                                    <img src="" alt="" id="img_{{product._id}}" class="card-img-top">
+                                </div>
+                                
+                                <div class="card-body">
+                                    <h5 class="card-title">{{product.name}}</h5>
+                                    <h6 class="card-subtitle text-muted">${{product.price}}</h6>
+                                </div>
+                            </div>
+                        </a>
+                    {{else}}
+                        <div class="card">
+                            <h1>No Products!</h1>
+                        </div>
+                    {{/each}}
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
 </div>
-{{/each}}
+
+{{#extend "js"}}
+
+    <script>
+        var products = JSON.parse(`{{{productsJSON}}}`);
+        for(let product of products){
+            let primaryImage = product.images.filter( (image) => {
+                return image.primary === true
+            })[0];
+
+            $('#img_'+product._id).attr('src', primaryImage.local?`/img/products/${product._id}/${primaryImage.filePath}`:primaryImage.filePath)
+        }
+    </script>
+{{/extend}}

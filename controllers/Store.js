@@ -10,6 +10,7 @@ module.exports = (app, passport, ...rest) => {
                 if(err) console.log(err)
                 let locals = {
                     products,
+                    productsJSON: JSON.stringify(products),
                     user: (req.user?req.user:undefined)
                 }
                 res.render('pages/store/productList', locals)
@@ -43,7 +44,8 @@ module.exports = (app, passport, ...rest) => {
                     res.render('pages/store/product', {product, productJSON: JSON.stringify(product)})
                 })
             } else {
-                Products.findOne({salable: true, name: prodName}, (err, product) => {
+                console.log(prodName)
+                Products.findOne({salable: true, name: prodName.toLowerCase()}, (err, product) => {
                     if(err) console.log(err)
                     console.log('Product: ',product)
                 })
