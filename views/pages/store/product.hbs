@@ -1,3 +1,122 @@
-{{#if product}}
-{{product.name}}
-{{/if}}
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-xs-12 col-md-8">
+                <div class="productImages">
+                    <div id="primaryImage"></div>
+                    <div class="productImageGallery">
+                        {{!-- Will add via js --}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-4">
+                <div class="productDetails">
+                    <h3 class="card-title">{{product.name}}</h3>
+                    <h4 id="productPrice"></h4>
+                    <div class="addToCartForm">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-secondary" type="button" id="decrementQty">-</button>
+                            </div>
+                            <input type="text" placeholder="Quantity" value="1" id="addQty" class="form-control"/>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" id="incrementQty">+</button>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary btn-block" role="button">+ Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="productBackground" id="descriptionBackground">
+                    <div class="productDescription">
+                        {{product.description}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{!-- Display Related products (if any) --}}
+{{!-- {{#if relatedProducts}} --}}
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title">Related Products</h3>
+        </div>
+    </div>
+{{!-- {{/if}} --}}
+
+{{!-- Display Comments (if any) --}}
+{{!-- {{#if product.comments}} --}}
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title">
+                Reviews
+            </h3>
+        </div>
+    </div>
+{{!-- {{/if}} --}}
+{{#extend "js"}}
+    
+    <script>
+        var product = JSON.parse(`{{{productJSON}}}`);
+        
+        //Price & Detail Column
+        $('#decrementQty').on('click', function() {
+            let qty = parseInt($('#addQty').val())
+            if(!Number.isNaN(qty) && qty >= 2){
+                qty--
+                $('#addQty').val(qty)
+            }
+        })
+
+        $('#incrementQty').on('click', function() {
+            let qty = parseInt($('#addQty').val())
+            if(!Number.isNaN(qty)){
+                if(product.maxQtyPerOrder !== 0 && qty < product.maxQtyPerOrder){
+
+                } 
+                qty++
+                $('#addQty').val(qty)
+            }
+        })
+
+        $('#productPrice').text(product.price > 0?'$'+product.price:'FREE')
+        //Image Gallery
+        var imageElements = [];
+        for(image of product.images){
+            let html = `
+            <div class="productImage" id="${image.name}" onClick="displayImage(this)">
+                <img src="${image.local?'/img/products/'+ product._id + '/' + image.filePath:image.filePath}" alt="${product.name + ' | ' + image.name}"/>
+            </div>
+            `;
+
+            imageElements.push(html);            
+        }
+
+        $('.productImageGallery').html(imageElements);
+
+        function displayImage(ev){
+            var imageName = $(ev).attr('id')
+            let selectedImage = product.images.filter( (image) => {
+                return image.name === imageName
+            })[0]
+            //console.log(selectedImage)
+            $('#primaryImage').html(`<img src="${selectedImage.local?'/img/products/'+ product._id + '/' + selectedImage.filePath:selectedImage.filePath}"/>`)
+            $('.productImage').each( (image) => {
+                $('.productImage')[image].classList.remove('active')
+            })
+            $(ev).addClass('active')
+        }
+        function onPageLoadDisplayImage(){
+            let selectedImage = product.images.filter( (image) => {
+                return image.primary === true;
+            })[0]
+            $('#primaryImage').html(`<img src="${selectedImage.local?'/img/products/'+ product._id + '/' + selectedImage.filePath:selectedImage.filePath}"/>`)
+            $('#'+selectedImage.name).addClass('active')
+        }
+        onPageLoadDisplayImage()
+    </script>
+{{/extend}}

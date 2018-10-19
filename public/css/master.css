@@ -4,3 +4,121 @@
 .card {
     margin-bottom: 20px;
 }
+/* Product List Page */
+.productsList {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: left;
+    flex-wrap: wrap;
+}
+.productsList .productCard {
+    width: 100%;
+    /* padding: 10px; */
+    margin-left: 5px;
+    margin-right: 5px;
+    transition: transform .3s;
+    text-decoration: none;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    color: #222;
+    backface-visibility: hidden;
+    /* -webkit-filter: blur(0); */
+    /* transform: translateZ(0); */
+}
+.productCard .card {
+    height: 100%;
+    /* backface-visibility: hidden; */
+}
+.productCard::after{
+    content: '';
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    z-index: -1;
+}
+
+.productCard:hover {
+    
+    /* box-shadow: 0px 0px 15px 1px #1212aa; */
+    transform: scale(1.02) translateZ(0) perspective(1px);
+    
+    
+    -webkit-font-smoothing: subpixel-antialiased;
+}
+.productCard:hover::after {
+    opacity: 1;
+}
+@media screen and (min-width: 768px){
+    .productsList .productCard {
+        width: 30.333%;
+    }
+}
+
+.productCardImage {
+    height: 200px;
+    background-color: #333;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    /* width: 200px; */
+}
+.productCardImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+/* Product Detail Page */
+.productImages {
+    width: 100%;
+    min-height: 200px;
+    background-color: #333;
+    padding: 10px;
+}
+
+#primaryImage {
+    width: 100%;
+    margin: auto;
+    background-color: #eee;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+}
+.productBackground {
+    min-width: 100%;
+    background-color: #eee;
+}
+.productImageGallery {
+    margin-top: 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    
+}
+
+.productImage {
+    width: 25%;
+    padding: 10px;
+    border: 2px solid transparent;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.productImage.active {
+    border-color: red;
+}
+.productImage img {
+    width: 100%;
+}
+#primaryImage img {
+    max-width: 100%;
+    max-height: 400px;
+    padding: 10px;
+}
