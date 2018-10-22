@@ -1,7 +1,28 @@
 <div class="card">
-    <div class="card-body">
-        <h1>Hello World</h1>
-        <p>Jumbotron with news/updates will go here</p>
+    <div class="card-body noPadding">
+        <div data-ride="carousel" class="carousel slide" id="featuredNews">
+            <ol class="carousel-indicators">
+                {{#each articles}}
+                    <li data-target="#featuredNews" data-slide-to="{{@index}}"></li>
+                {{/each}}   
+            </ol>
+            <div class="carousel-inner">
+                {{#each articles as |article|}}
+                    <div class="carousel-item">
+                        <img src="/img/articles/{{article._id}}/{{article.mainImg.filePath}}" alt="{{article.mainImg.name}}" class="d-block w-100">
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>{{article.title}}</h5>
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+            <a href="#featuredNews" class="carousel-control-prev" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </a>
+            <a href="#featuredNews" class="carousel-control-next" role="button" data-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </a>
+        </div>
     </div>
 </div>
 
@@ -13,6 +34,20 @@
 
 <div class="card">
     <div class="card-body">
-        <h2>Some Other Content</h2>
+        <h2>News</h2>
     </div>
 </div>
+
+<div class="card">
+    <div class="card-body">
+        <h2>Social</h2>
+    </div>
+</div>
+
+{{#extend "js"}}
+<script>
+    $('.carousel-indicators li').first().addClass('active');
+    $('.carousel-item').first().addClass('active')
+    //console.log()
+</script>
+{{/extend}}

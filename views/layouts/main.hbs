@@ -8,6 +8,7 @@
         <link rel="stylesheet" href="/css/bootstrap.css"> {{!-- Bootstrap --}}
         <link rel="stylesheet" href="/css/all.min.css"> {{!-- FontAwesome Pro --}}
         <link rel="stylesheet" href="/css/master.css"> {{!-- Main Overrides --}}
+        <link rel="stylesheet" href="/css/offcanvas.css">
         {{!-- Custom Styles --}}
         {{{block "css"}}}
     </head>
@@ -27,6 +28,9 @@
         {{!-- Scripts --}}
         <script src="/js/jQuery-3.3.1.min.js"></script> {{!-- jQuery --}}
         <script src="/js/bootstrap.bundle.min.js"></script> {{!-- Bootstrap + Popper --}}
+        <script>
+            var siteSettings = JSON.parse(`{{{siteSettingsJSON}}}`)
+        </script>
         {{!-- Custom Scripts --}}
         {{{block "js"}}}
     </body>

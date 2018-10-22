@@ -1,5 +1,6 @@
 //- Base Router
 const userHas = require('../middleware/permissions');
+var Articles = require('../models/site/Article')
 
 var user = null;
 
@@ -8,39 +9,24 @@ module.exports = (app, passport, ...rest) => {
     //Sub-Routers
     app.route('/')
         .get( (req, res) => {
-            //console.log(req.siteSettings.navigationBar.navLinks)
-            let locals = {
-                settings: req.siteSettings
-            }
-            if(req.user){
-                locals.user = req.user
-            }
-            locals.settings.siteTitle += 'Home';
-            res.render('pages/base/home', locals);
+            Articles.find({frontPage: true}).populate('createdBy').exec( (err, articles) => {
+                if(err) console.log(err);
+                console.log(articles)
+                res.render('pages/base/home', {articles});
+            })
+            
         })
     
     app.route('/about')
         .get( (req, res) => {
-            let locals = {
-                settings: viewSettings
-            }
-            if(req.user){
-                locals.user = req.user
-            }
-            locals.settings.title = 'B2D | About Us';
-            res.render('pages/base/about', locals)
+            
+            res.render('pages/base/about')
         })
 
     app.route('/contact')
         .get( (req, res) => {
-            let locals = {
-                settings: viewSettings
-            }
-            if(req.user){
-                locals.user = req.user
-            }
-            locals.settings.title = 'B2D | Contact Us';
-            res.render('pages/base/contact', locals)
+            
+            res.render('pages/base/contact')
         })
     app.route('/testPerm')
         .get( userHas({roles: ['Admin2'], permissions:['lookAtStuff']}), (req, res) => {
@@ -50,4 +36,7 @@ module.exports = (app, passport, ...rest) => {
     require('./Auth.js')(app, passport)
     //Routes from Store Controller
     require('./Store.js')(app, passport)
+    //Routes from Admin Controller
+    //require('./Admin.js')(app, passport)
+    
 }

@@ -47,7 +47,12 @@ mongoose.connect(dbURI, {useNewUrlParser: true}, (err, res) => {
 })
 //Get Site Settings from db.
 app.use(getSettings)
-
+app.use( (req, res, next) => {
+    if(req.user){
+        res.locals.user = req.user;
+    }
+    next()
+})
 // Router
 require('./controllers')(app, passport);
 
