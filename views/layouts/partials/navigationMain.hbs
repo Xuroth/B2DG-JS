@@ -1,5 +1,5 @@
 {{#extend "css"}}
-<link rel="stylesheet" href="/css/offcanvas.css"> {{!-- Offcanvas Plugin --}}
+ {{!-- Offcanvas Plugin --}}
 {{/extend}}
 <nav class="navbar navbar-expand-lg fixed-top navbar-light bg-light">
     <a href="/" class="navbar-brand">{{settings.title}}</a>
@@ -8,7 +8,7 @@
     </button>
     <div class="navbar-collapse offcanvas-collapse" id="mainNavbar">
         <ul class="navbar-nav mr-auto">
-            {{#each settings.navigationBar.navLinks as |navLink|}}
+            {{#each siteSettings.navigationBar.navLinks as |navLink|}}
                 {{#if navLink.hidden}}
                     
                 {{else}}
