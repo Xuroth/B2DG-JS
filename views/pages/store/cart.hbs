@@ -1,0 +1,38 @@
+<div class="card">
+    <div class="card-body">
+        <h2>Cart</h2>
+        <form action="/cart/update" method="POST">
+        <table>
+            <thead>
+                <tr>
+                    <th></th> {{!-- Item Image --}}
+                    <th>Name</th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                    <th></th> {{!-- Remove Button --}}
+                </tr>
+            </thead>
+            <tbody>
+                
+                {{#each cart.items as |cartItem|}}
+                <tr>
+                    <td></td>
+                    <td>{{cartItem.name}}</td>
+                    <td>
+                        <input type="text" class="form-control" value="{{cartItem.qty}}" name="qty[]">
+                        <input type="hidden" name="productID[]" value="{{cartItem._id}}">
+                    </td>
+                    <td>{{cartItem.formattedPrice}}</td>
+                    <td><i class="fal fa-times"></i></td>
+                </tr>
+                {{else}}
+                <tr>No items have been added to your cart.</tr>
+                {{/each}}
+                
+            </tbody>
+        </table>
+            <input type="hidden" name="nonce" value="{{nonce}}">
+            <button type="submit" class="btn btn-primary">Update Cart</button>
+        </form>
+    </div>
+</div>

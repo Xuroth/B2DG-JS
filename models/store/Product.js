@@ -44,10 +44,8 @@ var ProductSchema = new Schema({
     },
     categories: [
         {
-            _id: false,
-            catID: {
-                type: String
-            }
+            type: Schema.Types.ObjectId,
+            ref: 'Category'
         }
     ],
     images: [ImageSchema]
