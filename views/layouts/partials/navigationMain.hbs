@@ -56,6 +56,11 @@
                 <a href="/login" class="nav-link">Login</a>
             </li>
             {{/if}}
+            <li class="nav-item">
+                <a href="/cart" class="nav-link" id="cartIcon">
+                    <i class="{{siteSettings.cartIcon}}"></i>
+                </a>
+            </li>
         </ul>
         
     </div>
@@ -70,6 +75,22 @@
         $('[data-toggle="offcanvas"]').on('click', function() {
             $('.offcanvas-collapse').toggleClass('open')
         })
+
+        //Determine Cart Badge and display
+        if(siteSettings.cartDisplayType === 'count'){
+
+            let cartItems = cart.items.length;//will need to check in depth as cart.items is an array of objects, each with a 'qty' property.
+            if(cartItems > 0){
+                //Set item count to 0 and add qty of each item. Bad practise to adjust variable used in condition like this, but will modify once rest of cart functionality is written
+                cartItems = 0;
+                for(let item of cart.items){
+                    cartItems += parseInt(item.qty, 10);
+                }
+            }
+            let badge = `<span class="badge badge-secondary" id="cartBadge">${cartItems}</span>`;
+            $('#cartIcon').append(badge);
+        }
     })
+
 </script>
 {{/extend}}

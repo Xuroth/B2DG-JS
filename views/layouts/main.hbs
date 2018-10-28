@@ -30,6 +30,9 @@
         <script src="/js/bootstrap.bundle.min.js"></script> {{!-- Bootstrap + Popper --}}
         <script>
             var siteSettings = JSON.parse(`{{{siteSettingsJSON}}}`)
+            var nonce = `{{{nonce}}}`;
+            var cart = JSON.parse(`{{{cartJSON}}}`);
+            console.log('Secure Session ID (nonce): ', nonce)
         </script>
         {{!-- Custom Scripts --}}
         {{{block "js"}}}

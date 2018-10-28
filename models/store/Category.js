@@ -28,7 +28,8 @@ var CategorySchema = new Schema({
     },
     addedBy: {
         //UserID that created this resource
-        type: ObjectId
+        type: Schema.Types.ObjectId,
+        ref: 'User'
     },
     modifiedOn: {
         //Last edit timestamp
@@ -37,17 +38,18 @@ var CategorySchema = new Schema({
     },
     modifiedBy: {
         //UserID of last edit
-        type: ObjectId
+        type: Schema.Types.ObjectId, 
+        ref: 'User'
     }
 });
 
-CategorySchema.pre('save', function(next) {
-    let category = this;
-    //Ensure the helpText and description fields are present in document,
-    //even if they are just empty strings. SHOULD be handled by 'default'
-    //in schema entries.
+// CategorySchema.pre('save', function(next) {
+//     let category = this;
+//     //Ensure the helpText and description fields are present in document,
+//     //even if they are just empty strings. SHOULD be handled by 'default'
+//     //in schema entries.
 
-    //Other processing (none needed yet)
-})
+//     //Other processing (none needed yet)
+// })
 
 module.exports = mongoose.model('Category', CategorySchema);

@@ -8,6 +8,9 @@
 .noPadding {
     padding: 0px;
 }
+.hidden {
+    display: none;
+}
 /* Product List Page */
 .productsList {
     display: flex;
@@ -117,4 +120,18 @@
     max-width: 100%;
     max-height: 400px;
     padding: 10px;
+}
+.comment {
+    /* width: 100%; */
+    text-align: center;
+}
+.comment .commentUserPanel {
+    width: 10%;
+    display: inline-block;
+}
+.comment .commentTextPanel {
+    text-align: left;
+    width: 80%;
+    margin-left: 5%;
+    display: inline-block;
 }

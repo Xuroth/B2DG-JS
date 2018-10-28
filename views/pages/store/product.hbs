@@ -14,22 +14,26 @@
                     <h3 class="card-title">{{product.name}}</h3>
                     <h4 id="productPrice"></h4>
                     <div class="addToCartForm">
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <button class="btn btn-outline-secondary" type="button" id="decrementQty">-</button>
+                        <form action="/cart" method="POST">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <button class="btn btn-sm btn-outline-secondary" type="button" id="decrementQty">-</button>
+                                </div>
+                                <input type="text" placeholder="Quantity" value="1" id="addQty" name="addQty" class="form-control form-control-sm"/>
+                                <input type="hidden" name="productID" id="productID" value="{{product._id}}">
+                                <input type="hidden" name="nonce" id="nonce" value={{nonce}}>
+                                <div class="input-group-append">
+                                    <button class="btn btn-sm btn-outline-secondary" type="button" id="incrementQty">+</button>
+                                </div>
                             </div>
-                            <input type="text" placeholder="Quantity" value="1" id="addQty" class="form-control"/>
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary" type="button" id="incrementQty">+</button>
-                            </div>
-                        </div>
-                        <button class="btn btn-primary btn-block" role="button">+ Add to Cart</button>
+                            <button class="btn btn-primary btn-block" role="submit">+ Add to Cart</button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-xs-12">
+            <div class="col-xs-12 w-100">
                 <div class="productBackground" id="descriptionBackground">
                     <div class="productDescription">
                         {{product.description}}
@@ -40,21 +44,68 @@
     </div>
 </div>
 {{!-- Display Related products (if any) --}}
-{{!-- {{#if relatedProducts}} --}}
+{{#if product.relatedProducts}}
     <div class="card">
         <div class="card-body">
             <h3 class="card-title">Related Products</h3>
+            <div class="productsList">
+                {{#each product.relatedProducts as |relatedProduct|}}
+                    <a href="/product/{{relatedProduct._id}}" class="productCard">
+                        <div class="card">
+                            <div class="productCardImage">
+                                <img src="" alt="" id="img_{{relatedProduct._id}}" class="card-img-top">
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{relatedProduct.name}}</h5>
+                                <h6 class="card-subtitle text-muted">${{relatedProduct.price}}</h6>
+                            </div>
+                        </div>
+                    </a>
+                {{/each}}
+            </div>
         </div>
     </div>
-{{!-- {{/if}} --}}
+{{/if}}
 
 {{!-- Display Comments (if any) --}}
 {{!-- {{#if product.comments}} --}}
     <div class="card">
         <div class="card-body">
-            <h3 class="card-title">
-                Reviews
-            </h3>
+            <h4 class="card-title">Comments</h4>
+            <div class="commentsDisplay">
+                {{#each product.comments as |comment|}}                    
+                    <div class="comment">
+                        <div class="commentUserPanel">
+                            <div class="commentUserIcon"></div>
+                            <span>{{comment.author.username}}</span>
+                        </div>
+                        <div class="commentTextPanel">
+                            <div class="card">
+                                <div class="card-body">
+                                    {{comment.text}}
+                                </div>
+                            </div>
+                        </div>                            
+                    </div>
+                {{else}}
+                    <h3>No comments</h3>
+                    <h4>Be the first!</h4>                    
+                {{/each}}
+                {{#if user.username}}
+                    <div class="addComment">
+                        <div class="hidden commentForm">
+                            <form action="#" id="productCommentForm">
+                                <h5>Add Comment</h5>
+                                <textarea name="comment" id="comment" cols="30" rows="10" class="form-control"></textarea>
+                                <button class="btn btn-primary" type="submit">Add Comment</button>
+                            </form>
+                        </div>
+                        <button id="showCommentForm" class="btn btn-primary">Add Comment</button>
+                    </div>
+                {{else}}
+                    <h5><a href="#">Login</a> or <a href="#">Create Account</a> to comment!</h5>
+                {{/if}}
+            </div>            
         </div>
     </div>
 {{!-- {{/if}} --}}
@@ -62,7 +113,6 @@
     
     <script>
         var product = JSON.parse(`{{{productJSON}}}`);
-        
         //Price & Detail Column
         $('#decrementQty').on('click', function() {
             let qty = parseInt($('#addQty').val())
@@ -81,6 +131,11 @@
                 qty++
                 $('#addQty').val(qty)
             }
+        })
+
+        $('#showCommentForm').on('click', function() {
+           $(this).addClass('hidden')
+           $('#productCommentForm').parent().removeClass('hidden')
         })
 
         $('#productPrice').text(product.price > 0?'$'+product.price:'FREE')
@@ -117,6 +172,16 @@
             $('#primaryImage').html(`<img src="${selectedImage.local?'/img/products/'+ product._id + '/' + selectedImage.filePath:selectedImage.filePath}"/>`)
             $('#'+selectedImage.name).addClass('active')
         }
+        let relatedProducts = product.relatedProducts;
+        for(relatedProduct of relatedProducts){
+            let productImage = relatedProduct.images.filter( (image) => {
+                return image.primary === true;
+            })[0]
+            console.log(productImage)
+            $('#img_' + relatedProduct._id).attr('src',productImage.local?`/img/products/${relatedProduct._id}/${productImage.filePath}`:productImage.filePath);
+        }
         onPageLoadDisplayImage()
+        
+        
     </script>
 {{/extend}}
