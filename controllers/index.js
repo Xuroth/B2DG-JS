@@ -11,7 +11,7 @@ module.exports = (app, passport, ...rest) => {
         .get( (req, res) => {
             Articles.find({frontPage: true}).populate('createdBy').exec( (err, articles) => {
                 if(err) console.log(err);
-                console.log(articles)
+                //console.log(articles)
                 res.render('pages/base/home', {articles});
             })
             

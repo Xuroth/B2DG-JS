@@ -66,14 +66,14 @@ class Cart {
     static removeFromCart(productID = 0, cart){
         for(let i  = 0; i < cart.items.length; i++) {
             let item = cart.items[i];
-            if(item._id === productID) {
+            if(item._id.toString() === productID) {
                 cart.items.splice(i, 1);
                 this.calculateTotals(cart);
             }
         }
     }
     static emptyCart(req) {
-        cart = {
+        let cart = {
             items: [],
             totals: 0,
             formattedTotals: ''

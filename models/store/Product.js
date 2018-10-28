@@ -2,6 +2,8 @@ var mongoose    =   require('mongoose'),
     Schema      =   mongoose.Schema
 require('mongoose-double')(mongoose);
 
+
+
 var ImageSchema = new Schema({
     name: String,
     filePath: String,
@@ -46,6 +48,18 @@ var ProductSchema = new Schema({
         {
             type: Schema.Types.ObjectId,
             ref: 'Category'
+        }
+    ],
+    relatedProducts: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Product'
+        }
+    ],
+    comments: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Comment'
         }
     ],
     images: [ImageSchema]

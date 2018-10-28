@@ -46,7 +46,7 @@
             let primaryImage = product.images.filter( (image) => {
                 return image.primary === true
             })[0];
-
+            console.log(primaryImage)
             $('#img_'+product._id).attr('src', primaryImage.local?`/img/products/${product._id}/${primaryImage.filePath}`:primaryImage.filePath)
         }
     </script>

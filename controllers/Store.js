@@ -1,11 +1,12 @@
 var Products = require('../models/store/Product');
 var Categories = require('../models/store/Category')
+var Comments = require('../models/store/Comment')
 var Security = require('../libs/Security')
 var Cart = require('../libs/Cart')
 module.exports = (app, passport, ...rest) => {
     app.route('/products')
         .get( (req, res) => {
-            Products.find({salable: true}, (err, products) => {
+            Products.find({salable: true}).populate('relatedProducts').exec( (err, products) => {
                 //Add sorting logic based on database config.store.defaultSortOrder
                 //switch/case 'highestSales','newest', etc.
 
@@ -39,21 +40,45 @@ module.exports = (app, passport, ...rest) => {
                 validObjectId = false;
             }
             
+                
             if (validObjectId) {
                 //Supplied parameter is objectId
-                Products.findOne({salable: true, _id: prodName}).populate('categories').exec( (err, product) => {
+
+                Products.findOne({salable: true, _id: prodName}).populate('categories').populate({path: 'relatedProducts', match: {salable: true}, options: {limit: 10}}).populate({path: 'comments', match: {status: {$gte: 1}}, populate: {path: 'author'}}).exec( (err, product) => {
                     if(err) console.log(err)
+                    if(product === null || product === undefined) return res.redirect('/products')
+                    
                     console.log('Product (by ID): ', product)
+                    console.log(product)
+                    if(product.hasOwnProperty('relatedProducts')){
+                        let relatedProducts = []
+                        console.log('Getting related products')
+                        for(let i = 0; i < 3; i++) {
+                            let random = Math.floor(Math.random() * (product.relatedProducts.length -1))
+                            if(!relatedProducts.includes(product.relatedProducts[random])){
+                                relatedProducts.push(product.relatedProducts[random])
+                            } else {
+                                i--;
+                            }
+    
+                        }
+                        product.relatedProducts = relatedProducts;
+                    } else {
+                        console.log(Object.keys(product), product)
+                    }
+                    
                     res.render('pages/store/product', {product, productJSON: JSON.stringify(product)})
                 })
             } else {
                 console.log(prodName)
-                Products.findOne({salable: true, slug: prodName.toLowerCase()}).populate('categories').exec( (err, product) => {
+                Products.findOne({salable: true, slug: prodName.toLowerCase()}).populate('categories').populate('relatedProducts').exec( (err, product) => {
                     if(err) console.log(err)
                     console.log('Product: ',product)
                     res.render('pages/store/product', {product, productJSON: JSON.stringify(product)})
                 })
             }
+
+            
             
         })
     app.route('/cart')
@@ -67,6 +92,7 @@ module.exports = (app, passport, ...rest) => {
                 Products.findOne({_id: productID}).exec( (err, product) => {
                     if(err) console.log(err);
                     let cart = (req.session.cart?req.session.cart:null);
+                    //Check to verify maxQtyPerOrder and inStock vs qty, handle errors here.
                     Cart.addToCart(product, qty, cart);
                     res.redirect('/')
                 })
@@ -86,6 +112,26 @@ module.exports = (app, passport, ...rest) => {
                 console.log('Security Mismatch.')
                 res.redirect('/cart')
             }
+        })
+    app.route('/cart/remove/:id/:nonce')
+        .get( (req, res) => {
+            let id = req.params.id;
+            console.log('Removing ID: ', id)
+            if(Security.isValidNonce(req.params.nonce, req)){
+                Cart.removeFromCart(id, req.session.cart);
+                res.redirect('/cart')
+            } else {
+                console.log('Security NONCE invalid')
+                res.redirect('/cart')
+            }
+        })
+    app.route('/cart/empty/:nonce')
+        .get( (req, res) => {
+            if(Security.isValidNonce(req.params.nonce, req)) {
+                Cart.emptyCart(req);
+                
+            }
+            res.redirect('/cart')
         })
     //Delete this route after testing!
     app.route('/newProd')

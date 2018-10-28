@@ -1,6 +1,7 @@
 <div class="card">
     <div class="card-body">
         <h2>Cart</h2>
+        {{#if cart.items}}
         <form action="/cart/update" method="POST">
         <table>
             <thead>
@@ -22,17 +23,21 @@
                         <input type="text" class="form-control" value="{{cartItem.qty}}" name="qty[]">
                         <input type="hidden" name="productID[]" value="{{cartItem._id}}">
                     </td>
-                    <td>{{cartItem.formattedPrice}}</td>
-                    <td><i class="fal fa-times"></i></td>
+                    <td>{{cartItem.formattedPrice}}(each) </td>
+                    <td><a href="/cart/remove/{{cartItem._id}}/{{../nonce}}">{{nonce}}<i class="fal fa-times"></i></a></td>
                 </tr>
-                {{else}}
-                <tr>No items have been added to your cart.</tr>
+                
                 {{/each}}
                 
             </tbody>
         </table>
             <input type="hidden" name="nonce" value="{{nonce}}">
+            <a href="/cart/empty/{{nonce}}" class="btn btn-danger">Empty Cart</a>
             <button type="submit" class="btn btn-primary">Update Cart</button>
         </form>
+        <div>{{cart.formattedTotals}}</div>
+        {{else}}
+        <h4>No items have been added to your cart!</h4>
+        {{/if}}
     </div>
 </div>

@@ -33,9 +33,7 @@ app.use(bodyParser.urlencoded({extended: false}))
 //     resave: false,
 //     saveUninitialized: false
 // }))
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(flash());
+
 
 require('./conf/passport')(passport);
 
@@ -62,6 +60,9 @@ app.use(session({
     name: `${process.env.COOKIE_NAME}_${Security.generateID()}`,
     genid: (req) => Security.generateID()
 }))
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
 app.get('/sessCheck', (req, res) => {
     if(!req.session.test) {
         req.session.test = 'OK'; //Create new property in session
@@ -98,8 +99,10 @@ app.use( (req, res, next) => {
 //Get Site Settings from db.
 app.use(getSettings)
 app.use( (req, res, next) => {
+    console.log('Checking for user session...\n'+req.user)
     if(req.user){
         res.locals.user = req.user;
+        console.log(req.user)
     }
 
     next()
